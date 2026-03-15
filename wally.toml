@@ -6,5 +6,6 @@ realm = "shared"
 
 [dependencies]
 sift = "csqrl/sift@0.0.11"
+jest = "jsdotlua/jest@3.10.0"
 jest-globals = "jsdotlua/jest-globals@3.10.0"
 react = "jsdotlua/react@17.2.1"
