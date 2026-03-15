@@ -1,15 +1,15 @@
-local ServerScriptService = game:GetService("ServerScriptService")
-local jest = require(ServerScriptService.Kairos.packages.jest)
+local test = script.Parent.tests
+local jest = require(script.Parent.packages.jest)
 local runcli = jest.runCLI
 
 local process_service_exists, process_service = pcall(function(...)
 	return game:GetService("ProcessService")
 end)
 
-local status, result = runcli(ServerScriptService.Kairos.test, {
+local status, result = runcli(test, {
 	verbose = false,
 	ci = false,
-}, { ServerScriptService.Kairos.test })
+}, { test })
 
 if status == "Rejected" then
 	print(result)
