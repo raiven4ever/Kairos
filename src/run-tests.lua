@@ -1,4 +1,4 @@
-local test = script.Parent.tests
+local tests = script.Parent.__tests__
 local jest = require(script.Parent.packages.jest)
 local runcli = jest.runCLI
 
@@ -6,10 +6,10 @@ local process_service_exists, process_service = pcall(function(...)
 	return game:GetService("ProcessService")
 end)
 
-local status, result = runcli(test, {
+local status, result = runcli(tests, {
 	verbose = false,
 	ci = false,
-}, { test })
+}, { tests })
 
 if status == "Rejected" then
 	print(result)
