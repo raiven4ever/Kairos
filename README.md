@@ -4,7 +4,7 @@
 
 ## how it works
 
-kairos starts tracking the moment studio opens. assign time to a **project** - a simple, freeform container you define — and it will record every session, calculate totals, and surface stats like your longest session, active days, and average work length.
+kairos starts tracking the moment studio opens. assign time to a **project** - a simple, freeform container you define - and it will record every session, calculate totals, and surface stats like your longest session, active days, and average work length.
 
 if you haven't selected a project yet, time is held in an **unassigned** pool and can be reassigned later.
 
