@@ -35,13 +35,13 @@ local project_metatable = {
 		-- this is the setter, so i'm gonna put here everything i want if i want to reflect the changes IMMEDIATELY somewhere
 		-- for example, i could fire a signal when this changes
 		--[[
-            local old = self._content[key]
+			local old = self._content[key]
 
-            if old ~= value then
-                self._content[key] = value
-                -- fire change signal
-            end
-        ]]
+			if old ~= value then
+				self._content[key] = value
+				-- fire change signal
+				end
+		]]
 		table._content[key] = value
 	end,
 }
