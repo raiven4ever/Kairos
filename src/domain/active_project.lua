@@ -1,84 +1,45 @@
 --!strict
 local RunService = game:GetService("RunService")
 
-local project = require(script.Parent.project)
+local project_module = require(script.Parent.project)
+
 local types = require(script.Parent.utils.types)
 
-type Project = project.Project
+type Project = project_module.Project
 type DateTimeData = types.DateTimeData
 
 local module = {
-	current_project = nil :: project.Project?,
-	connection = nil :: RBXScriptConnection?,
-	current_session_time = 0,
+	-- project
+	current_project = nil :: project_module.Project?,
+
+	-- time keeping
+	start_time = DateTime.now(), -- starts immediately when module is requires (i have a bad feeling about this)
+	-- end_time, but no need for symmetry yet
 }
 
-function module:start()
-	module.connection = RunService.Heartbeat:Connect(function(delta_time: number)
-		if module.current_project then
-			module.current_project.TotalTime += delta_time
-		end
+function module:start_project(project: Project)
+	assert(not module.current_project and project, "A project is already running or project is nil")
 
-		module.current_session_time += delta_time
-	end)
+	module.current_project = project
 end
 
-function module:start_project(proj: Project)
-	assert(proj and not module.current_project, "Project must be provided and no project should be active")
+function module:switch_project(project: Project)
+	assert(module.current_project and project, "No project is currently running or new project is nil")
 
-	local function modify_active_days()
-		local current = DateTime.now()
-		local same_day
-		do
-			if not proj.LastWorked then
-				same_day = false
-			else
-				local current_local_time = current:ToLocalTime() :: DateTimeData
-				local last_worked_local_time = proj.LastWorked:ToLocalTime() :: DateTimeData
-
-				same_day = current_local_time.Day == last_worked_local_time.Day
-					and current_local_time.Year == last_worked_local_time.Year
-					and current_local_time.Month == last_worked_local_time.Month
-			end
-		end
-		if not same_day then
-			proj.ActiveDays += 1
-		end
-	end
-
-	module.current_project = proj
-
-	-- modify proj
-	proj.Sessions += 1
-
-	if not proj.FirstSessionDate then
-		proj.FirstSessionDate = DateTime.now()
-	end
-
-	modify_active_days()
-
-	if not proj.LastWorked then
-		proj.LastWorked = DateTime.now()
-	end
+	module.current_project = project
 end
 
-function module:terminate_project()
-	local proj = module.current_project
-
-	assert(proj, "No active project to terminate")
-
-	-- modify proj
-	proj.AverageSessionLength = proj.TotalTime / proj.Sessions
-	proj.LongestSession = math.max(proj.LongestSession, module.current_session_time)
+function module:end_project()
+	assert(module.current_project, "No project is currently running")
 
 	module.current_project = nil
-	module.current_session_time = 0
 end
 
-function module:terminate()
-	if module.connection then
-		module.connection:Disconnect()
-	end
+function module:session_duration()
+	assert(module.start_time, "start_time is not initialized")
+
+	local now_data = DateTime.now():ToLocalTime() :: DateTimeData
+	-- TODO: convert this to duration
 end
 
 return module
