@@ -1,4 +1,4 @@
-export type DateParts = { -- the fact that this is not a type is fucking stupid
+export type DateTimeData = { -- the fact that this is not a type is fucking stupid
 	Year: number,
 	Month: number,
 	Day: number,
