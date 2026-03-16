@@ -13,11 +13,18 @@ local module = {
 	current_session_time = 0,
 }
 
-function module:start(proj: Project)
-	assert(
-		proj and not module.current_project and not module.connection,
-		"Project must be provided, and there must be no current project or connection"
-	)
+function module:start()
+	module.connection = RunService.Heartbeat:Connect(function(delta_time: number)
+		if module.current_project then
+			module.current_project.TotalTime += delta_time
+		end
+
+		module.current_session_time += delta_time
+	end)
+end
+
+function module:start_project(proj: Project)
+	assert(proj and not module.current_project, "Project must be provided and no project should be active")
 
 	local function modify_active_days()
 		local current = DateTime.now()
@@ -53,24 +60,25 @@ function module:start(proj: Project)
 	if not proj.LastWorked then
 		proj.LastWorked = DateTime.now()
 	end
-
-	module.connection = RunService.Heartbeat:Connect(function(delta_time: number)
-		proj.TotalTime += delta_time
-		module.current_session_time += delta_time
-	end)
 end
 
-function module:terminate()
+function module:terminate_project()
 	local proj = module.current_project
 
-	assert(proj and module.connection, "No active project or connection to terminate")
-	module.connection:Disconnect()
+	assert(proj, "No active project to terminate")
 
 	-- modify proj
 	proj.AverageSessionLength = proj.TotalTime / proj.Sessions
 	proj.LongestSession = math.max(proj.LongestSession, module.current_session_time)
 
 	module.current_project = nil
+	module.current_session_time = 0
+end
+
+function module:terminate()
+	if module.connection then
+		module.connection:Disconnect()
+	end
 end
 
 return module
