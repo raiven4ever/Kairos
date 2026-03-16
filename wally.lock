@@ -255,4 +255,9 @@ dependencies = [["collections", "jsdotlua/collections@1.2.7"]]
 [[package]]
 name = "raiven4ever/kairos"
 version = "0.1.0"
-dependencies = [["jest", "jsdotlua/jest@3.10.0"], ["jest-globals", "jsdotlua/jest-globals@3.10.0"], ["react", "jsdotlua/react@17.2.1"], ["sift", "csqrl/sift@0.0.11"]]
+dependencies = [["jest", "jsdotlua/jest@3.10.0"], ["jest-globals", "jsdotlua/jest-globals@3.10.0"], ["react", "jsdotlua/react@17.2.1"], ["sift", "csqrl/sift@0.0.11"], ["signal", "sleitnick/signal@2.0.3"]]
+
+[[package]]
+name = "sleitnick/signal"
+version = "2.0.3"
+dependencies = []
