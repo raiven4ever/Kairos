@@ -1,3 +1,6 @@
+--!strict
+local duration_module = require(script.Parent.time.duration)
+
 export type DateTimeData = { -- the fact that this is not a type is fucking stupid
 	Year: number,
 	Month: number,
@@ -48,5 +51,7 @@ export type ProjectField =
 export type ProjectProxy = {
 	_content: ProjectMetaData,
 }
+
+export type Duration = duration_module.Duration
 
 return nil

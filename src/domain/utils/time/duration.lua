@@ -5,17 +5,16 @@ export type Duration = {
 	Hour: number,
 	Minute: number,
 	Second: number,
-	Millisecond: number,
 }
 
 local module = {}
 
 function module:get(from: DateTime, to: DateTime)
-	local from_millis = from.UnixTimestampMillis
-	local to_millis = to.UnixTimestampMillis
-	assert(to_millis > from_millis, "to DateTime must be after from DateTime")
+	local from_seconds = from.UnixTimestamp
+	local to_seconds = to.UnixTimestamp
+	assert(to_seconds > from_seconds, "to DateTime must be after from DateTime")
 
-	local duration_number = to_millis - from_millis
+	local duration_number = to_seconds - from_seconds
 
 	local function mod_then_divide(val: number)
 		local to_return = duration_number % val
@@ -24,7 +23,6 @@ function module:get(from: DateTime, to: DateTime)
 		return to_return
 	end
 
-	local ms = mod_then_divide(1000)
 	local sec = mod_then_divide(60)
 	local min = mod_then_divide(60)
 	local hour = mod_then_divide(24)
@@ -35,8 +33,9 @@ function module:get(from: DateTime, to: DateTime)
 		Hour = hour,
 		Minute = min,
 		Second = sec,
-		Millisecond = ms,
 	} :: Duration
 end
+
+-- TODO: function from
 
 return module
