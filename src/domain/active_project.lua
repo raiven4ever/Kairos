@@ -1,5 +1,4 @@
 --!strict
-local RunService = game:GetService("RunService")
 
 local project_module = require(script.Parent.project)
 
