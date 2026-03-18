@@ -12,8 +12,7 @@ type Project = project.Project
 type ProjectField = types.ProjectField
 
 --[[
-TODO: modify this such that it when original_list_changes, and when working_list changes,
-something happens
+TODO: when working_list changes, a signal fires
 ]]
 local module = {
 	original_list = {} :: { Project },
