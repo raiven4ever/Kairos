@@ -38,7 +38,6 @@ function module:get(from: DateTime, to: DateTime)
 	} :: Duration
 end
 
--- TODO: function to
 function module:from_seconds(amount: number)
 	local total_seconds = amount
 
@@ -61,6 +60,11 @@ function module:from_seconds(amount: number)
 		Seconds = seconds,
 		TotalSeconds = total_seconds,
 	} :: Duration
+end
+
+-- TODO: function to
+function module:to_seconds(duration: Duration) -- this is so fucking trivial, this shouldn't be a function outside of wanting symmetry
+	return duration.TotalSeconds
 end
 
 return module
