@@ -36,6 +36,6 @@ function module:get(from: DateTime, to: DateTime)
 	} :: Duration
 end
 
--- TODO: function from
+-- TODO: function from and to
 
 return module
