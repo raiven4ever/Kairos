@@ -87,4 +87,11 @@ function module:reset()
 	module.modified_list = sift.Array.copy(module.projects_list)
 end
 
+--[[
+TODO: functions:
+-	add projects
+-	remove projects
+-	edit projects
+]]
+
 return module
