@@ -32,20 +32,18 @@ export type ProjectMetaData = {
 	Tags: { string },
 }
 
-export type ProjectField =
-	(
-		"Name"
-		| "Description"
-		| "CreationDate"
-		| "LastWorked"
-		| "TotalTime"
-		| "Sessions"
-		| "AverageSessionLength"
-		| "LongestSession"
-		| "FirstSessionDate"
-		| "ActiveDays"
-		| "Tags"
-	)
+export type ProjectField = 
+	| "Name"
+	| "Description"
+	| "CreationDate"
+	| "LastWorked"
+	| "TotalTime"
+	| "Sessions"
+	| "AverageSessionLength"
+	| "LongestSession"
+	| "FirstSessionDate"
+	| "ActiveDays"
+	| "Tags"
 	| string
 
 export type ProjectProxy = {
