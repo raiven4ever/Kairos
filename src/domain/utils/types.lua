@@ -11,7 +11,7 @@ export type DateTimeData = { -- the fact that this is not a type is fucking stup
 	Millisecond: number,
 }
 
-export type ProjectRecord = { [string]: (string | number | { string })? }
+export type ProjectRecord = { [string]: (string | number | DateTime | { string })? }
 
 export type ProjectMetaData = {
 	-- Core metadata
