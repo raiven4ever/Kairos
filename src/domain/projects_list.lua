@@ -12,12 +12,12 @@ type Project = project.Project
 type ProjectField = types.ProjectField
 
 --[[
-TODO: modify this such that it when projects_list_changes, it changes modified_list automatically, and when modified_list changes,
+TODO: modify this such that it when original_list_changes, it changes working_list automatically, and when working_list changes,
 something happens
 ]]
 local module = {
-	projects_list = {} :: { Project },
-	modified_list = {} :: { Project },
+	original_list = {} :: { Project },
+	working_list = {} :: { Project },
 }
 
 function module:search(search_term: string)
@@ -43,13 +43,13 @@ function module:search(search_term: string)
 		return project_score
 	end
 
-	module.modified_list = sort(module.modified_list, function(first_project, second_project): boolean
+	module.working_list = sort(module.working_list, function(first_project, second_project): boolean
 		return score(first_project) < score(second_project)
 	end)
 end
 
 function module:filter(predicate: (value: Project, _: number, _: { Project }) -> boolean)
-	module.modified_list = filter(module.modified_list, predicate)
+	module.working_list = filter(module.working_list, predicate)
 end
 
 function module:sort(metadatum: ProjectField)
@@ -80,11 +80,11 @@ function module:sort(metadatum: ProjectField)
 		end
 	end
 
-	module.modified_list = sort(module.modified_list, by_attribute_type)
+	module.working_list = sort(module.working_list, by_attribute_type)
 end
 
 function module:reset()
-	module.modified_list = sift.Array.copy(module.projects_list)
+	module.working_list = sift.Array.copy(module.original_list)
 end
 
 --[[
