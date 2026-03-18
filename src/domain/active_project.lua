@@ -22,7 +22,6 @@ function module:start_project(project: Project)
 	assert(not module.current_project and project, "A project is already running or project is nil")
 
 	module.current_project = project
-	-- TODO: if project last worked date is not the same as today's date, adjust days active for this project
 end
 
 function module:end_project()
@@ -50,6 +49,7 @@ function module:end_project()
 	local sessions = project.Sessions + 1
 	local average_session_length = total_time / sessions
 	local longest_session = math.max(project.LongestSession, session_duration.TotalSeconds)
+	local first_session_date = if not project.FirstSessionDate then DateTime.now() else project.FirstSessionDate
 	local active_days = if different_dates(project.LastWorked, last_worked)
 		then project.ActiveDays + math.max(1, session_duration.Days)
 		else project.ActiveDays
@@ -59,6 +59,7 @@ function module:end_project()
 	project.Sessions = sessions
 	project.AverageSessionLength = average_session_length
 	project.LongestSession = longest_session
+	project.FirstSessionDate = first_session_date
 	project.ActiveDays = active_days
 
 	module.current_project = nil
