@@ -12,7 +12,7 @@ type Project = project.Project
 type ProjectField = types.ProjectField
 
 --[[
-TODO: modify this such that it when original_list_changes, it changes working_list automatically, and when working_list changes,
+TODO: modify this such that it when original_list_changes, and when working_list changes,
 something happens
 ]]
 local module = {
