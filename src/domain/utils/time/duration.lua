@@ -1,14 +1,16 @@
 --!strict
 
 export type Duration = {
-	Day: number,
-	Hour: number,
-	Minute: number,
-	Second: number,
+	Days: number,
+	Hours: number,
+	Minutes: number,
+	Seconds: number,
+	TotalSeconds: number,
 }
 
 local module = {}
 
+-- TODO: update based on the new functions
 function module:get(from: DateTime, to: DateTime)
 	local from_seconds = from.UnixTimestamp
 	local to_seconds = to.UnixTimestamp
@@ -36,6 +38,29 @@ function module:get(from: DateTime, to: DateTime)
 	} :: Duration
 end
 
--- TODO: function from and to
+-- TODO: function to
+function module:from_seconds(amount: number)
+	local total_seconds = amount
+
+	local function mod_then_divide(val: number)
+		local to_return = amount % val
+		amount = math.floor(amount / val)
+
+		return to_return
+	end
+
+	local seconds = mod_then_divide(60)
+	local minutes = mod_then_divide(60)
+	local hours = mod_then_divide(24)
+	local days = amount
+
+	return {
+		Days = days,
+		Hours = hours,
+		Minutes = minutes,
+		Seconds = seconds,
+		TotalSeconds = total_seconds,
+	} :: Duration
+end
 
 return module
