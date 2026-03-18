@@ -25,18 +25,43 @@ function module:start_project(project: Project)
 	-- TODO: if project last worked date is not the same as today's date, adjust days active for this project
 end
 
-function module:switch_project(project: Project)
-	assert(module.current_project and project, "No project is currently running or new project is nil")
-
-	module.current_project = project
-end
-
 function module:end_project()
-	assert(module.current_project, "No project is currently running")
+	local start_time = module.start_time
+	local project = module.current_project
+	assert(project and start_time, "Project or start_time is nil")
+
+	local function different_dates(date1: DateTime, date2: DateTime): boolean
+		local date1_data = date1:ToLocalTime() :: DateTimeData
+		local date2_data = date2:ToLocalTime() :: DateTimeData
+
+		return date1_data.Year ~= date2_data.Year
+			or date1_data.Month ~= date2_data.Month
+			or date1_data.Second ~= date2_data.Second
+	end
+
+	-- core metadata
+	local last_worked = DateTime.now()
+
+	-- needed data but are not metadata
+	local session_duration = duration_module:get(start_time, last_worked)
+
+	-- time statistics
+	local total_time = project.TotalTime + session_duration.TotalSeconds
+	local sessions = project.Sessions + 1
+	local average_session_length = total_time / sessions
+	local longest_session = math.max(project.LongestSession, session_duration.TotalSeconds)
+	local active_days = if different_dates(project.LastWorked, last_worked)
+		then project.ActiveDays + math.max(1, session_duration.Days)
+		else project.ActiveDays
+
+	-- modify project
+	project.TotalTime = total_time
+	project.Sessions = sessions
+	project.AverageSessionLength = average_session_length
+	project.LongestSession = longest_session
+	project.ActiveDays = active_days
 
 	module.current_project = nil
-	-- TODO: if duration is more than a day, for freaks, adjust days active for this project
-	-- TODO: adjust total time worked after
 end
 
 function module:session_duration()
