@@ -28,7 +28,7 @@ local function DEFAULT_PROJECT_DATA(): ProjectData
 	}
 end
 
-local project_changed_signal = signal.new() :: Signal<Project, string, number>
+local project_changed_signal = signal.new() :: Signal<ProjectData, string, number>
 
 local project_metatable = {
 	__index = function(proxy: ProjectProxy, key: string)
@@ -68,7 +68,7 @@ function module:new(overrides: ProjectData?)
 end
 
 function module:serialize(project: Project): ProjectData
-	return (project)._content
+	return table.clone((project)._content)
 end
 
 return module
