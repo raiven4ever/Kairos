@@ -21,6 +21,7 @@ function module:get(from: DateTime, to: DateTime)
 end
 
 function module:from_seconds(amount: number)
+	assert(amount >= 0, "amount must be greater than or equal to 0")
 	local total_seconds = amount
 
 	local function mod_then_divide(val: number)
