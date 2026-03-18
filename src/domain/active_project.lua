@@ -55,6 +55,7 @@ function module:end_project()
 		else project.ActiveDays
 
 	-- modify project
+	project.LastWorked = last_worked
 	project.TotalTime = total_time
 	project.Sessions = sessions
 	project.AverageSessionLength = average_session_length
