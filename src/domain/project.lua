@@ -3,11 +3,12 @@ local types = require(script.Parent.utils.types)
 
 local signal = require(script.Parent.Parent.packages.signal)
 
-type ProjectData = types.ProjectMetaData
+type ProjectMetaData = types.ProjectMetaData
 type ProjectProxy = types.ProjectProxy
+type ProjectFieldValue = types.ProjectFieldValue
 type Signal<T...> = signal.Signal<T...>
 
-local function DEFAULT_PROJECT_DATA(): ProjectData
+local function DEFAULT_PROJECT_DATA(): ProjectMetaData
 	return {
 		-- Core metadata
 		Name = "New Project",
@@ -28,7 +29,7 @@ local function DEFAULT_PROJECT_DATA(): ProjectData
 	}
 end
 
-local project_changed_signal = signal.new() :: Signal<ProjectData, string, any>
+local project_changed_signal = signal.new() :: Signal<ProjectMetaData, string, ProjectFieldValue>
 
 local project_metatable = {
 	__index = function(proxy: ProjectProxy, key: string)
@@ -37,7 +38,7 @@ local project_metatable = {
 		return proxy._content[key]
 	end,
 
-	__newindex = function(proxy: ProjectProxy, key: string, value: any)
+	__newindex = function(proxy: ProjectProxy, key: string, value: ProjectFieldValue)
 		-- this is the setter, so i'm gonna put here everything i want if i want to reflect the changes IMMEDIATELY somewhere
 		-- for example, i could fire a signal when this changes
 		local old = proxy._content[key]
@@ -49,14 +50,14 @@ local project_metatable = {
 }
 
 export type Project =
-	typeof(setmetatable({ _content = {} :: ProjectData } :: ProjectProxy, project_metatable))
-	& ProjectData
+	typeof(setmetatable({ _content = {} :: ProjectMetaData } :: ProjectProxy, project_metatable))
+	& ProjectMetaData
 
 local module = {
 	ProjectChanged = project_changed_signal,
 }
 
-function module:new(overrides: ProjectData?)
+function module:new(overrides: ProjectMetaData?)
 	local content = DEFAULT_PROJECT_DATA()
 	local project = setmetatable({ _content = content } :: ProjectProxy, project_metatable)
 	if overrides then
@@ -67,7 +68,7 @@ function module:new(overrides: ProjectData?)
 	return project
 end
 
-function module:serialize(project: Project): ProjectData
+function module:serialize(project: Project): ProjectMetaData
 	return table.clone((project)._content)
 end
 

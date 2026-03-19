@@ -1,4 +1,6 @@
 --!strict
+local ServerScriptService = game:GetService("ServerScriptService")
+local signal = require(ServerScriptService.Kairos.packages.signal)
 local sift = require(script.Parent.Parent.packages.sift)
 
 local project = require(script.Parent.project)
@@ -9,15 +11,20 @@ local filter = sift.Array.filter
 local levenshtein_similarity = require(script.Parent.utils.math.levenshtein_similarity)
 
 type Project = project.Project
+type ProjectMetaData = types.ProjectMetaData
 type ProjectField = types.ProjectField
+type Signal<T...> = signal.Signal<T...>
 
---[[
-TODO: when working_list changes, a signal fires
-]]
 local module = {
 	original_list = {} :: { Project },
 	working_list = {} :: { Project },
+	working_list_changed = signal.new() :: Signal<{ Project }>,
 }
+
+function module:set(project_list: { Project }) -- fucking powerful, use with high caution
+	module.working_list = project_list
+	module.working_list_changed:Fire(project_list)
+end
 
 function module:search(search_term: string)
 	local function score(proj: Project): number
