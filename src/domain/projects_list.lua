@@ -58,8 +58,12 @@ function module:filter(predicate: (value: Project, _: number, _: { Project }) ->
 	module:set(filter(module.working_list, predicate))
 end
 
-function module:sort(metadatum: ProjectField)
+function module:sort(metadatum: ProjectField, is_ascending: boolean)
 	assert(metadatum ~= "Tags", "Cannot sort by 'Tags' field")
+
+	local function compare(first_value: any, second_value: any)
+		return if is_ascending then first_value < second_value else second_value < first_value
+	end
 
 	local function by_attribute_type(first_project: Project, second_project: Project): boolean
 		local first_attribute = first_project[metadatum]
@@ -67,6 +71,7 @@ function module:sort(metadatum: ProjectField)
 
 		if not (first_attribute and second_attribute) then
 			return not second_attribute -- if first ~= nil and second == nil
+			-- nil values always last no matter the case, but might change my mind idk
 		end
 
 		local typeof_result = typeof(first_attribute)
@@ -80,9 +85,9 @@ function module:sort(metadatum: ProjectField)
 			local first_datetime = first_attribute :: DateTime
 			local second_datetime = second_attribute :: DateTime
 
-			return first_datetime.UnixTimestamp < second_datetime.UnixTimestamp
+			return compare(first_datetime.UnixTimestamp, second_datetime.UnixTimestamp)
 		else
-			return first_attribute < second_attribute
+			return compare(first_attribute, second_attribute)
 		end
 	end
 
