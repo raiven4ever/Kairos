@@ -49,13 +49,13 @@ function module:search(search_term: string)
 		return project_score
 	end
 
-	module.working_list = sort(module.working_list, function(first_project, second_project): boolean
+	module:set(sort(module.working_list, function(first_project, second_project): boolean
 		return score(first_project) < score(second_project)
-	end)
+	end))
 end
 
 function module:filter(predicate: (value: Project, _: number, _: { Project }) -> boolean)
-	module.working_list = filter(module.working_list, predicate)
+	module:set(filter(module.working_list, predicate))
 end
 
 function module:sort(metadatum: ProjectField)
@@ -86,11 +86,11 @@ function module:sort(metadatum: ProjectField)
 		end
 	end
 
-	module.working_list = sort(module.working_list, by_attribute_type)
+	module:set(sort(module.working_list, by_attribute_type))
 end
 
 function module:reset()
-	module.working_list = sift.Array.copy(module.original_list)
+	module:set(sift.Array.copy(module.original_list))
 end
 
 --[[
