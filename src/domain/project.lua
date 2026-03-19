@@ -28,7 +28,7 @@ local function DEFAULT_PROJECT_DATA(): ProjectData
 	}
 end
 
-local project_changed_signal = signal.new() :: Signal<ProjectData, string, number>
+local project_changed_signal = signal.new() :: Signal<ProjectData, string, any>
 
 local project_metatable = {
 	__index = function(proxy: ProjectProxy, key: string)
