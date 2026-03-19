@@ -3,14 +3,15 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local signal = require(ServerScriptService.Kairos.packages.signal)
 local sift = require(script.Parent.Parent.packages.sift)
 
-local project = require(script.Parent.project)
+local project_module = require(script.Parent.project)
 local types = require(script.Parent.utils.types)
 
-local sort = sift.Array.sort
+local add = sift.Array.push)
 local filter = sift.Array.filter
+local sort = sift.Array.sort
 local levenshtein_similarity = require(script.Parent.utils.math.levenshtein_similarity)
 
-type Project = project.Project
+type Project = project_module.Project
 type ProjectMetaData = types.ProjectMetaData
 type ProjectField = types.ProjectField
 type Signal<T...> = signal.Signal<T...>
@@ -104,5 +105,11 @@ TODO: functions:
 -	remove projects
 -	edit projects
 ]]
+
+function module:add(data: ProjectMetaData)
+	local new_project = project_module:new(data)
+	local new_list = add(module.original_list, new_project)
+	module:set(new_list)
+end
 
 return module

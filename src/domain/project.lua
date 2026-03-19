@@ -57,9 +57,9 @@ local module = {
 	ProjectChanged = project_changed_signal,
 }
 
-function module:new(overrides: ProjectMetaData?)
+function module:new(overrides: ProjectMetaData?): Project
 	local content = DEFAULT_PROJECT_DATA()
-	local project = setmetatable({ _content = content } :: ProjectProxy, project_metatable)
+	local project = setmetatable({ _content = content } :: ProjectProxy, project_metatable) :: Project
 	if overrides then
 		for key, value in pairs(overrides) do -- i normally do not ever use pairs or ipairs but the linter keeps crying
 			content[key] = value
