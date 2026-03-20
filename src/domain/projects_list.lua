@@ -152,8 +152,10 @@ function module:edit(project_name_to_edit: string, new_attributes: ProjectMetaDa
 		project_to_edit_data[field] = new_value
 	end
 
-	module:set_projects(remove(module.original_list, project_to_edit))
-	module:set_projects(add(module.original_list, project_module:new(project_to_edit_data)))
+	local project_list_to_set = remove(module.original_list, project_to_edit)
+	project_list_to_set = add(project_list_to_set, project_module:new(project_to_edit_data))
+
+	module:set_projects(project_list_to_set)
 end
 
 return module
