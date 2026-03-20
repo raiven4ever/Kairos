@@ -19,9 +19,17 @@ type ProjectMetaData = types.ProjectMetaData
 type ProjectField = types.ProjectField
 type Signal<T...> = signal.Signal<T...>
 
+type FilterPredicate = (first_project: Project, second_project: Project) -> boolean
+
 local module = {
+	-- project lists
 	original_list = {} :: { Project },
 	working_list = {} :: { Project },
+
+	-- query lists
+	filters = {} :: { FilterPredicate },
+
+	-- signals
 	working_list_changed = signal.new() :: Signal<{ Project }>,
 }
 
@@ -164,5 +172,13 @@ TODO:
 -	remove filter function
 -	apply filters function
 ]]
+
+-- in most implementations, the set that will be the result of the query, would be the intersection of all the sets that satisfy each
+-- filter
+function module:add_filter(filter: FilterPredicate) -- TODO: this is definitely wrong. i have a feeling that filters shouldn't be
+	-- pure functions, but has some metadata attached to them. i think that will give us some flexibilty, like if we ever decide
+	-- to optimize bundling the filters together, or to tell the presentation on which filters are currently in effect
+	module.filters = add(module.filters, filter)
+end
 
 return module
