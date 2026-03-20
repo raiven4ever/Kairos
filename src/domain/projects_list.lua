@@ -102,12 +102,6 @@ function module:reset()
 	module:set_working_list(sift.Array.copy(module.original_list))
 end
 
---[[
-TODO: functions:
--	remove projects
--	edit projects
-]]
-
 function module:set_projects(project_list: { Project })
 	module.original_list = project_list
 	--[[
