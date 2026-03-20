@@ -115,6 +115,14 @@ function module:set_projects(project_list: { Project })
 end
 
 function module:add(project: Project)
+	local function is_in_list(list: { Project }, project: Project): boolean
+		-- TODO: implement
+	end
+
+	if is_in_list(module.original_list, project) then
+		return
+	end -- enforce name uniqueness
+
 	module:set_projects(add(module.original_list, project))
 end
 
