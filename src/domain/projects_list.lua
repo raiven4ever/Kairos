@@ -138,4 +138,28 @@ function module:remove(project_name: string)
 	module:set_projects(remove(module.original_list, project_to_remove))
 end
 
+function module:edit(project_name_to_edit: string, new_attributes: ProjectMetaData)
+	-- for future reference, let it be a principle that you must get the project from its name.
+	local project_to_edit = binary_search(module.original_list, project_name_to_edit)
+	-- names have to be available, otherwise everything goes, for now
+	local project_with_new_name_exists = binary_search(module.original_list, new_attributes.Name)
+	assert(
+		project_to_edit and not project_with_new_name_exists,
+		"Edit failed: project does not exist or the new name is already in use"
+	)
+
+	-- the consequences of my actions. every single time i edit a field, it would fire a signal. i now know for future references that
+	-- this is a bad idea. now, a work around on this is to re-set the original list to its copy with the old project removed and the
+	-- new version appended
+
+	local project_to_edit_data = project_module:serialize(project_to_edit)
+
+	for field, new_value in new_attributes do
+		project_to_edit_data[field] = new_value
+	end
+
+	module:set_projects(remove(module.original_list, project_to_edit))
+	module:set_projects(add(module.original_list, project_module:new(project_to_edit_data)))
+end
+
 return module
