@@ -158,4 +158,11 @@ function module:edit(project_name_to_edit: string, new_attributes: ProjectMetaDa
 	module:set_projects(project_list_to_set)
 end
 
+--[[
+TODO:
+-	add filter function
+-	remove filter function
+-	apply filters function
+]]
+
 return module
