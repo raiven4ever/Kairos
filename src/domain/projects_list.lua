@@ -6,8 +6,9 @@ local sift = require(script.Parent.Parent.packages.sift)
 local project_module = require(script.Parent.project)
 local types = require(script.Parent.utils.types)
 
-local add = sift.Array.push)
+local add = sift.Array.push
 local filter = sift.Array.filter
+local remove = sift.Array.removeValue
 local sort = sift.Array.sort
 local levenshtein_similarity = require(script.Parent.utils.math.levenshtein_similarity)
 
@@ -22,7 +23,7 @@ local module = {
 	working_list_changed = signal.new() :: Signal<{ Project }>,
 }
 
-function module:set(project_list: { Project }) -- fucking powerful, use with high caution
+function module:set_working_list(project_list: { Project }) -- fucking powerful, use with high caution
 	module.working_list = project_list
 	module.working_list_changed:Fire(project_list)
 end
@@ -50,13 +51,13 @@ function module:search(search_term: string)
 		return project_score
 	end
 
-	module:set(sort(module.working_list, function(first_project, second_project): boolean
+	module:set_working_list(sort(module.working_list, function(first_project, second_project): boolean
 		return score(first_project) < score(second_project)
 	end))
 end
 
 function module:filter(predicate: (value: Project, _: number, _: { Project }) -> boolean)
-	module:set(filter(module.working_list, predicate))
+	module:set_working_list(filter(module.working_list, predicate))
 end
 
 function module:sort(metadatum: ProjectField, is_ascending: boolean)
@@ -92,24 +93,29 @@ function module:sort(metadatum: ProjectField, is_ascending: boolean)
 		end
 	end
 
-	module:set(sort(module.working_list, by_attribute_type))
+	module:set_working_list(sort(module.working_list, by_attribute_type))
 end
 
 function module:reset()
-	module:set(sift.Array.copy(module.original_list))
+	module:set_working_list(sift.Array.copy(module.original_list))
 end
 
 --[[
 TODO: functions:
--	add projects
+-	fix add projects
 -	remove projects
 -	edit projects
 ]]
 
-function module:add(data: ProjectMetaData)
-	local new_project = project_module:new(data)
-	local new_list = add(module.original_list, new_project)
-	module:set(new_list)
+function module:set_projects(project_list: { Project })
+	module.original_list = project_list
+	--[[
+	TODO: when this function is fired, set working list to a copy of the new original list, then reapply all the filters
+	]]
+end
+
+function module:add(project: Project)
+	module:set_projects(add(module.original_list, project))
 end
 
 return module
