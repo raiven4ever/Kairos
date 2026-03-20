@@ -10,6 +10,8 @@ local add = sift.Array.push
 local filter = sift.Array.filter
 local remove = sift.Array.removeValue
 local sort = sift.Array.sort
+
+local binary_search = require(script.Parent.utils.math.binary_search)
 local levenshtein_similarity = require(script.Parent.utils.math.levenshtein_similarity)
 
 type Project = project_module.Project
@@ -114,16 +116,20 @@ function module:set_projects(project_list: { Project })
 	]]
 end
 
-function module:add(project: Project)
-	local function is_in_list(list: { Project }, project: Project): boolean
-		-- TODO: implement
+function module:is_in_original_list(name: string)
+	local list = module.original_list
+
+	return if binary_search(list, name) then true else false
+end
+
+function module:add(project_data: ProjectMetaData)
+	assert(project_data, "project_data cannot be nil")
+	if module:is_in_original_list(project_data.Name) then
+		return
 	end
 
-	if is_in_list(module.original_list, project) then
-		return
-	end -- enforce name uniqueness
-
-	module:set_projects(add(module.original_list, project))
+	local new_project = project_module:new(project_data)
+	module:set_projects(add(module.original_list, new_project))
 end
 
 return module
