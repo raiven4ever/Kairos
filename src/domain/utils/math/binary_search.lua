@@ -10,7 +10,7 @@ return function(project_list: { Project }, name_to_find: string): Project?
 	while left <= right do
 		local middle = left + math.floor((right - left) / 2)
 		local project = project_list[middle]
-		local project_name = project_list[middle].Name :: string -- why the fuck is the linter crying?
+		local project_name = project.Name :: string -- why the fuck is the linter crying?
 		if project_name < name_to_find then
 			left = middle + 1
 		elseif project_name > name_to_find then

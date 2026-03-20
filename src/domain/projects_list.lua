@@ -104,7 +104,6 @@ end
 
 --[[
 TODO: functions:
--	fix add projects
 -	remove projects
 -	edit projects
 ]]
@@ -130,6 +129,13 @@ function module:add(project_data: ProjectMetaData)
 
 	local new_project = project_module:new(project_data)
 	module:set_projects(add(module.original_list, new_project))
+end
+
+function module:remove(project_name: string)
+	local project_to_remove = binary_search(module.original_list, project_name)
+	assert(project_to_remove, "Project '" .. project_name .. "' not found in original list")
+
+	module:set_projects(remove(module.original_list, project_to_remove))
 end
 
 return module
